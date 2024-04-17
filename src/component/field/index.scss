@@ -1,0 +1,40 @@
+@use '../../style' as s;
+
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: s.space(2);
+
+    &__label {
+        font-size: 14px;
+        color: gray;
+    }
+
+    &__input {
+        border: 1px solid rgba(247, 247, 247, 1);
+        background-color: rgba(247, 247, 247, 1);
+        padding: s.space(4);
+        border-radius: 10px;
+        font-size: 14px;
+
+        &::placeholder {
+            color: rgba(136, 136, 136, 1);
+        }
+
+        color: black;
+
+        transition: border-color 0.3s;
+
+        &:hover {
+            border-color: gray;
+        }
+
+        &:focus {
+            border-color: gray;
+        }
+
+        &--error {
+            border-color: red !important;
+        }
+    }
+}
