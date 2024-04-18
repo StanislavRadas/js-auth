@@ -1,7 +1,7 @@
 <div class="field field--checkbox">
-    <button type="button" class="field__wrapper" 
+    <button type="button" class="field__wrapper validation" 
     onclick="fieldCheckbox.toggle(this)
-    {{action}}('{{name}}', this.hasAttribute('active'))">
+    {{action}}('{{name}}', this.hasAttribute('active'))" name="{{name}}">
         <span class="checkbox__icon"></span>
         <span class="field__label field__label--checkbox">{{label}}</span>
     </button>
