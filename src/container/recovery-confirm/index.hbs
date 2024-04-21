@@ -1,0 +1,26 @@
+<div class="page page--background">
+    <header>
+        {{> back-button}}
+    </header>
+    <form class="page__section">
+        <h1 class="page__title">Recovery Confirm</h1>
+        <div class="form">
+            <div class="form__item">
+                {{> field action="recoveryConfirmForm.change" label="Code" type="number" name="code" placeholder="Code"}}
+                <span name="code" class="form__error">Error</span>
+            </div>
+            <div class="form__item">
+                {{> field-password action="recoveryConfirmForm.change" label="Password" type="password" name="password"
+                placeholder="Password"}}
+                <span name="password" class="form__error">Error</span>
+            </div>
+            <div class="form__item">
+                {{> field-password action="recoveryConfirmForm.change" label="Repeat password" type="password" name="passwordAgain"
+                placeholder="Password"}}
+                <span name="passwordAgain" class="form__error">Error</span>
+            </div>
+        </div>
+        <button onclick="recoveryConfirmForm.submit()" class="button button--disabled" type="button">Change password</button>
+        <span class="alert alert--disabled">Attention, Error</span>
+    </form>
+</div>
