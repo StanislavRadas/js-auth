@@ -45,6 +45,12 @@ body {
 		font-size: 24px;
 		color: s.color(dark);
 	}
+
+	&__subtitle {
+		font-size: 14px;
+		line-height: 1.5em;
+		color: rgba(54, 54, 54, 1);
+	}
 }
 
 

@@ -5,10 +5,11 @@ const router = express.Router()
 
 const { User } = require('../class/user')
 const { Confirm } = require('../class/confirm')
+const { Session } = require('../class/session')
 
 User.create({
   email: 'test@mail.com',
-  pasword: 123,
+  password: 123,
   role: 1,
 })
 
@@ -68,10 +69,14 @@ router.post('/signup', function (req, res) {
       })
     }
 
-    User.create({email, password, role})
+    const newUser = User.create({ email, password, role })
+    const session = Session.create(newUser)
+
+    Confirm.create(newUser.email)
 
     return res.status(200).json({
-      message: 'User is created!'
+      message: 'User is created!',
+      session,
     })
   } catch (err) {
     return res.status(400).json({
@@ -178,8 +183,134 @@ router.post('/recovery-confirm', function (req, res) {
     }
     user.password = password;
     console.log(user)
+    const session = Session.create(user)
+
     return res.status(200).json({
-      message: 'Password changed'
+      message: 'Password changed',
+      session
+    })
+  } catch (err) {
+    return res.status(400).json({
+      message: err.message,
+    })
+  }
+})
+
+router.get('/signup-confirm', function (req, res) {
+  // res.render генерує нам HTML сторінку
+  const { renew, email } = req.query
+
+  if (renew) {
+    Confirm.create(email)
+  }
+  // ↙️ cюди вводимо назву файлу з сontainer
+  return res.render('signup-confirm', {
+    // вказуємо назву контейнера
+    name: 'signup-confirm',
+    // вказуємо назву компонентів
+    component: ['back-button', 'field',],
+
+    // вказуємо назву сторінки
+    title: 'Signup page',
+    // ... сюди можна далі продовжувати додавати потрібні технічні дані, які будуть використовуватися в layout
+
+    // вказуємо дані,
+    data: {
+    },
+  })
+  // ↑↑ сюди вводимо JSON дані
+})
+
+router.post('/signup-confirm', function (req, res) {
+  const { code, token } = req.body
+  
+  if (!code || !token) {
+    return res.status(400).json({
+      message: 'Error. Requierd field is empty',
+    })
+  }
+  try {
+    const session = Session.get(token)
+    if (!session) {
+      return res.status(400).json({
+      message: 'Error. You are not logged in',
+    })
+    }
+    const email = Confirm.getData(code)
+
+    if (!email) {
+      return res.status(400).json({
+      message: 'Error. Code is incorrect',
+    })
+    }
+    if (email !== session.user.email) {
+      return res.status(400).json({
+      message: 'Error. Code is incorrect',
+    })
+    }
+
+    const user = User.getByEmail(session.user.email)
+    user.isConfirm = true
+    session.user.isConfirm = true
+
+    return res.status(200).json({
+      message: 'You succesfully email confirm',
+      session,
+    })
+  } catch (err) {
+    return res.status(400).json({
+      message: err.message,
+    })
+  }
+})
+
+router.get('/login', function (req, res) {
+  // res.render генерує нам HTML сторінку
+
+  // ↙️ cюди вводимо назву файлу з сontainer
+  return res.render('login', {
+    // вказуємо назву контейнера
+    name: 'login',
+    // вказуємо назву компонентів
+    component: ['back-button', 'field', 'field-password',],
+
+    // вказуємо назву сторінки
+    title: 'Login page',
+    // ... сюди можна далі продовжувати додавати потрібні технічні дані, які будуть використовуватися в layout
+
+    // вказуємо дані,
+    data: {
+    },
+  })
+  // ↑↑ сюди вводимо JSON дані
+})
+
+router.post('/login', function (req, res) {
+  const { email, password } = req.body
+
+  if (!email || !password) {
+    return res.status(400).json({
+      message: 'Error. Requierd fields are empty'
+    })
+  }
+
+  try {
+    const user = User.getByEmail(email)
+    if (!user) {
+      return res.status(400).json({
+        message: 'Error email is incorrect'
+      })
+    }
+    if (user.password !== password) {
+      return res.status(400).json({
+        message: 'Error. Password is incorrect'
+      })
+    }
+    const session = Session.create(user)
+
+    return res.status(200).json({
+      message: 'You are log in!',
+      session,
     })
   } catch (err) {
     return res.status(400).json({

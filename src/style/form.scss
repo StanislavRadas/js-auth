@@ -76,3 +76,12 @@
         border-color: red !important;
     }
 }
+
+.link {
+    color: rgba(244, 111, 23, 1);
+    @include s.click;
+}
+
+.link__prefix {
+    color: rgba(136, 136, 136, 1);
+}
