@@ -1,0 +1,26 @@
+@use '../../style/' as s;
+
+@use '../../style/form.scss' as form;
+
+.user {
+    display: flex;
+    flex-direction: column;
+    gap: s.space(2);
+
+    &--click {
+        @include s.click;
+        text-decoration: none;
+    }
+
+    &__title {
+        font-size: 16px;
+        height: 16px;
+        color: rgba(54, 54, 54, 1);
+    }
+
+    &__sub {
+        font-size: 14px;
+        height: 16px;
+        color: rgba(136, 136, 136, 1);
+    }
+}
